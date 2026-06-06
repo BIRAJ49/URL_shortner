@@ -16,6 +16,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://url-shortner-hcur.onrender.com',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 INSTALLED_APPS = [
     'shortener',

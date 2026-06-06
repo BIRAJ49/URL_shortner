@@ -18,6 +18,7 @@
     <dd>{% if url.expires_at %}{{ url.expires_at|date:"Y-m-d H:i" }}{% else %}Never{% endif %}</dd>
   </dl>
   <img class="qr" src="{% url 'shortener:qr' url.pk %}" alt="QR code for {{ url.key }}">
+  <p class="qr-link">{{ request.scheme }}://{{ request.get_host }}{{ url.get_short_path }}</p>
   <div class="form-actions">
     <a class="button primary" href="{% url 'shortener:edit' url.pk %}">Edit</a>
     <a class="button danger" href="{% url 'shortener:delete' url.pk %}">Delete</a>
