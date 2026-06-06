@@ -1,7 +1,13 @@
 # Django URL Shortener
 
-This is a simple URL shortener built with Django.
+This project is a URL shortener web application built with Django.
 
-Users can create an account, log in, and shorten long URLs. Each shortened URL belongs to the user who created it. Users can view, edit, and delete their own short URLs.
+The project includes user authentication so users can register, log in, and log out. Only logged-in users can create and manage short URLs.
 
-The app also tracks how many times each short URL is clicked. Short URLs can use automatically generated keys or custom keys. A URL can also have an optional expiration time and a QR code.
+Long URLs are saved with a short key. The app supports automatic short key generation using SHA-256, and users can also choose a custom short key if it is available.
+
+Each user can view a list of their own short URLs, edit existing URLs, or delete them. Every short URL stores its creation date, optional expiration time, and click count.
+
+When a short URL is opened, the app redirects to the original long URL and updates the click count. Expired URLs no longer redirect.
+
+The project also includes QR code generation for short URLs and basic tests for the main features.

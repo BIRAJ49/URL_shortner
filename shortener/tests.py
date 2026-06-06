@@ -5,19 +5,19 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import ShortURL, base62_encode
+from .models import KEY_LENGTH, ShortURL, sha256_short_key
 
 
 class ShortURLModelTests(TestCase):
-    def test_base62_encode(self):
-        self.assertEqual(base62_encode(1), '1')
-        self.assertEqual(base62_encode(62), '10')
+    def test_sha256_short_key(self):
+        self.assertEqual(sha256_short_key('abc'), 'ba7816bf8f')
 
     def test_generates_key_when_missing(self):
         user = User.objects.create_user(username='owner', password='testpass123')
         short_url = ShortURL.objects.create(owner=user, long_url='https://example.com/a')
 
-        self.assertEqual(short_url.key, base62_encode(short_url.pk))
+        self.assertEqual(len(short_url.key), KEY_LENGTH)
+        self.assertTrue(all(char in '0123456789abcdef' for char in short_url.key))
 
 
 class ShortURLViewTests(TestCase):

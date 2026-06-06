@@ -1,4 +1,4 @@
-import string
+import hashlib
 
 from django.conf import settings
 from django.db import models
@@ -6,19 +6,11 @@ from django.urls import reverse
 from django.utils import timezone
 
 
-BASE62_ALPHABET = string.digits + string.ascii_letters
+KEY_LENGTH = 10
 
 
-def base62_encode(number):
-    if number == 0:
-        return BASE62_ALPHABET[0]
-
-    encoded = []
-    base = len(BASE62_ALPHABET)
-    while number:
-        number, remainder = divmod(number, base)
-        encoded.append(BASE62_ALPHABET[remainder])
-    return ''.join(reversed(encoded))
+def sha256_short_key(value):
+    return hashlib.sha256(str(value).encode()).hexdigest()[:KEY_LENGTH]
 
 
 class ShortURL(models.Model):
@@ -41,11 +33,19 @@ class ShortURL(models.Model):
         needs_key = not self.key
         super().save(*args, **kwargs)
         if needs_key:
-            self.key = base62_encode(self.pk)
+            self.key = self.generate_key()
             super().save(update_fields=['key'])
 
+    def generate_key(self):
+        for counter in range(100):
+            seed = f'{self.pk}:{self.owner_id}:{self.long_url}:{counter}'
+            key = sha256_short_key(seed)
+            if not ShortURL.objects.filter(key=key).exclude(pk=self.pk).exists():
+                return key
+        raise ValueError('Could not generate a unique short key.')
+
     def is_expired(self):
-        return self.expires_at is not None and self.expires_at <= timezone.now()
+        return bool(self.expires_at and self.expires_at <= timezone.now())
 
     def get_short_path(self):
         return reverse('shortener:redirect', kwargs={'key': self.key})

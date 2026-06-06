@@ -1,5 +1,6 @@
 from io import BytesIO
 
+import qrcode
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -80,8 +81,6 @@ def redirect_short_url(request, key):
 @login_required
 def qr_code(request, pk):
     short_url = get_object_or_404(ShortURL, pk=pk, owner=request.user)
-    import qrcode
-
     absolute_url = request.build_absolute_uri(short_url.get_short_path())
     image = qrcode.make(absolute_url)
     buffer = BytesIO()

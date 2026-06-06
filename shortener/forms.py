@@ -57,10 +57,7 @@ class ShortURLForm(forms.ModelForm):
         if key.lower() in RESERVED_KEYS:
             raise ValidationError('This short key is reserved.')
 
-        queryset = ShortURL.objects.filter(key=key)
-        if self.instance and self.instance.pk:
-            queryset = queryset.exclude(pk=self.instance.pk)
-        if queryset.exists():
+        if ShortURL.objects.filter(key=key).exclude(pk=self.instance.pk).exists():
             raise ValidationError('This short key is already taken.')
 
         return key
@@ -74,10 +71,8 @@ class ShortURLForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         custom_key = self.cleaned_data.get('custom_key')
-        if custom_key:
+        if custom_key or instance.pk is None:
             instance.key = custom_key
-        elif instance.pk is None:
-            instance.key = ''
 
         if commit:
             instance.save()
