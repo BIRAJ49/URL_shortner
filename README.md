@@ -1,13 +1,54 @@
 # Django URL Shortener
 
-This project is a URL shortener web application built with Django.
+A simple URL shortener built with Django. Users can create an account, shorten long URLs, manage their own links, and see how many times each short link has been used.
 
-The project includes user authentication so users can register, log in, and log out. Only logged-in users can create and manage short URLs.
+## Setup
 
-Long URLs are saved with a short key. The app supports automatic short key generation using SHA-256, and users can also choose a custom short key if it is available.
+Create a virtual environment:
 
-Each user can view a list of their own short URLs, edit existing URLs, or delete them. Every short URL stores its creation date, optional expiration time, and click count.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-When a short URL is opened, the app redirects to the original long URL and updates the click count. Expired URLs no longer redirect.
+Install the requirements:
 
-The project also includes QR code generation for short URLs and basic tests for the main features.
+```bash
+pip install -r requirements.txt
+```
+
+Apply the database migrations:
+
+```bash
+python manage.py migrate
+```
+
+Start the Django server:
+
+```bash
+python manage.py runserver
+```
+
+## What the app does
+
+- Users can register, log in, and log out.
+- Logged-in users can create short URLs.
+- Each user can only view, edit, and delete their own URLs.
+- Short URLs redirect to the original long URL.
+- The app tracks the number of clicks for each short URL.
+- Created date and expiration date are shown for each URL.
+
+## Extra features
+
+- Custom short keys can be added while creating or editing a URL.
+- Automatic short keys are generated using SHA-256.
+- URLs can have an optional expiration time.
+- QR codes are available for short URLs.
+
+## Tests
+
+Run the tests with:
+
+```bash
+python manage.py test
+```
