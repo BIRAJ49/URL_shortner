@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ url.key }}{% endblock %}
+
+{% block content %}
+<section class="panel detail">
+  <h1>{{ url.key }}</h1>
+  <dl>
+    <dt>Short URL</dt>
+    <dd><a href="{{ url.get_short_path }}" target="_blank">{{ request.scheme }}://{{ request.get_host }}{{ url.get_short_path }}</a></dd>
+    <dt>Destination</dt>
+    <dd><a href="{{ url.long_url }}" target="_blank">{{ url.long_url }}</a></dd>
+    <dt>Clicks</dt>
+    <dd>{{ url.click_count }}</dd>
+    <dt>Created</dt>
+    <dd>{{ url.created_at|date:"Y-m-d H:i" }}</dd>
+    <dt>Expires</dt>
+    <dd>{% if url.expires_at %}{{ url.expires_at|date:"Y-m-d H:i" }}{% else %}Never{% endif %}</dd>
+  </dl>
+  <img class="qr" src="{% url 'shortener:qr' url.pk %}" alt="QR code for {{ url.key }}">
+  <div class="form-actions">
+    <a class="button primary" href="{% url 'shortener:edit' url.pk %}">Edit</a>
+    <a class="button danger" href="{% url 'shortener:delete' url.pk %}">Delete</a>
+    <a class="button" href="{% url 'shortener:list' %}">Back</a>
+  </div>
+</section>
+{% endblock %}

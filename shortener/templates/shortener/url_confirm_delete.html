@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Delete URL{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <h1>Delete short URL?</h1>
+  <p>This will remove <strong>{{ object.key }}</strong> and its analytics.</p>
+  <form method="post" class="form-actions">
+    {% csrf_token %}
+    <button class="danger" type="submit">Delete</button>
+    <a class="button" href="{% url 'shortener:list' %}">Cancel</a>
+  </form>
+</section>
+{% endblock %}

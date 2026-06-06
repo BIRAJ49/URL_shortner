@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}My URLs{% endblock %}
+
+{% block content %}
+<div class="page-title">
+  <div>
+    <h1>My short URLs</h1>
+    <p>Create and manage shortened links.</p>
+  </div>
+  <a class="button primary" href="{% url 'shortener:create' %}">Create URL</a>
+</div>
+
+{% if urls %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Short URL</th>
+          <th>Destination</th>
+          <th>Clicks</th>
+          <th>Created</th>
+          <th>Expires</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for url in urls %}
+          <tr>
+            <td><a href="{{ url.get_short_path }}" target="_blank">{{ request.scheme }}://{{ request.get_host }}{{ url.get_short_path }}</a></td>
+            <td class="truncate"><a href="{{ url.long_url }}" target="_blank">{{ url.long_url }}</a></td>
+            <td>{{ url.click_count }}</td>
+            <td>{{ url.created_at|date:"Y-m-d H:i" }}</td>
+            <td>{% if url.expires_at %}{{ url.expires_at|date:"Y-m-d H:i" }}{% else %}Never{% endif %}</td>
+            <td class="actions">
+              <a href="{% url 'shortener:detail' url.pk %}">View</a>
+              <a href="{% url 'shortener:edit' url.pk %}">Edit</a>
+              <a class="danger" href="{% url 'shortener:delete' url.pk %}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <section class="panel empty">
+    <h2>No URLs yet</h2>
+    <p>Create your first short URL to see it here.</p>
+    <a class="button primary" href="{% url 'shortener:create' %}">Create URL</a>
+  </section>
+{% endif %}
+{% endblock %}
