@@ -6,7 +6,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-g@0tyxr$!cl8jkm0!0@umfh_#^bhqhh-d7wf=y-iw#5d(^yj49'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'url-shortner-hcur.onrender.com',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://url-shortner-hcur.onrender.com',
+]
 
 
 INSTALLED_APPS = [
